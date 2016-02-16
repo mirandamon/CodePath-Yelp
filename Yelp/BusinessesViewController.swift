@@ -49,6 +49,16 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 */
     }
     
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        self.searchBar.showsCancelButton = true
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         if (filteredBusinesses == nil) {
             filteredBusinesses = businesses
