@@ -3,19 +3,25 @@
 //  Yelp
 //
 //  Created by Timothy Lee on 4/23/15.
+//  Modified by Nathan Miranda on 2/14/15
 //  Copyright (c) 2015 Timothy Lee. All rights reserved.
 //
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     var businesses: [Business]!
+    var filteredBusinesses: [Business]!
+    var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        navigationItem.titleView = searchBar
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -41,6 +47,27 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
 */
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        if (filteredBusinesses == nil) {
+            filteredBusinesses = businesses
+        }
+        if searchText.isEmpty {
+            businesses = filteredBusinesses
+        }
+        else {
+            businesses = businesses.filter({(dataItem: Business) -> Bool in
+                if dataItem.name!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
+                    return true
+                }
+                else {
+                    return false
+                }
+            })
+        }
+        
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
